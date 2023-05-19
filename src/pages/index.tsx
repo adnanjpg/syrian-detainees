@@ -3,6 +3,8 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
 
+import { type SubmitHandler, useForm } from "react-hook-form";
+
 const Home = () => {
   return (
     <div className="flex h-screen w-screen justify-center ">
@@ -14,18 +16,54 @@ const Home = () => {
   );
 };
 
+type FormValues = {
+  content: string;
+};
+
 const CreatePost = () => {
+  const { register, reset: resetForm, handleSubmit } = useForm<FormValues>();
+
+  const ctx = api.useContext();
+
+  const { mutate, isLoading: isPosting } = api.posts.create.useMutation({
+    onSuccess: () => {
+      resetForm({
+        content: "",
+      });
+      void ctx.posts.getAll.invalidate();
+    },
+  });
+
+  const createPost: SubmitHandler<FormValues> = (vals) => {
+    const cont = vals.content;
+    mutate({ content: cont });
+  };
+
   return (
-    <div className="my-2 flex w-full flex-row border-b-4 p-2">
-      <textarea
-        // dont show border when focused
-        className=" w-full resize-none rounded-xl py-2 outline-none"
-        maxLength={140}
-      />
-      <button className=" h-14 rounded-xl bg-teal-400 px-8   text-white">
-        Post
-      </button>
-    </div>
+    <form
+      onSubmit={(event) => {
+        void handleSubmit(createPost)(event);
+      }}
+    >
+      <div className="my-2 flex w-full flex-row border-b-4 p-2">
+        <textarea
+          // dont show border when focused
+          className=" w-full resize-none rounded-xl py-2 outline-none"
+          maxLength={140}
+          placeholder="What's happening?"
+          {...register("content", { required: true })}
+        />
+        {isPosting && <div>Posting...</div>}
+        {!isPosting && (
+          <button
+            className="h-14 rounded-xl bg-teal-400 px-8 text-white"
+            type="submit"
+          >
+            Post
+          </button>
+        )}
+      </div>
+    </form>
   );
 };
 
@@ -36,13 +74,11 @@ const PostsView = () => {
 
   const data = posts.data;
 
-  if (posts.isError || !data) return <div>Error: {posts.error.message}</div>;
+  if (posts.isError || !data) return <div>Error: {posts.error?.message}</div>;
 
   return (
     <div className="flex flex-col ">
-      {[...data, ...data].map((post) => (
-        <PostItem key={post.id} post={post} />
-      ))}
+      {...data.map((post) => <PostItem key={post.id} post={post} />)}
     </div>
   );
 };
