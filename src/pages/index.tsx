@@ -4,7 +4,29 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 
 const Home = () => {
-  return <PostsView />;
+  return (
+    <div className="flex h-screen w-screen justify-center ">
+      <div className="w-full max-w-3xl items-center border-x-2">
+        <CreatePost />
+        <PostsView />
+      </div>
+    </div>
+  );
+};
+
+const CreatePost = () => {
+  return (
+    <div className="my-2 flex w-full flex-row border-b-4 p-2">
+      <textarea
+        // dont show border when focused
+        className=" w-full resize-none rounded-xl py-2 outline-none"
+        maxLength={140}
+      />
+      <button className=" h-14 rounded-xl bg-teal-400 px-8   text-white">
+        Post
+      </button>
+    </div>
+  );
 };
 
 const PostsView = () => {
@@ -17,12 +39,10 @@ const PostsView = () => {
   if (posts.isError || !data) return <div>Error: {posts.error.message}</div>;
 
   return (
-    <div className="flex h-screen w-screen justify-center">
-      <div className="flex w-full max-w-5xl flex-col items-center  bg-slate-50">
-        {[...data, ...data].map((post) => (
-          <PostItem key={post.id} post={post} />
-        ))}
-      </div>
+    <div className="flex flex-col ">
+      {[...data, ...data].map((post) => (
+        <PostItem key={post.id} post={post} />
+      ))}
     </div>
   );
 };
@@ -30,11 +50,7 @@ const PostsView = () => {
 const PostItem = (props: { post: Post }) => {
   const post = props.post;
 
-  return (
-    <div className="w-full border-b border-slate-200 p-4 text-teal-400">
-      {post.content}
-    </div>
-  );
+  return <div className="w-full border-b  p-4">{post.content}</div>;
 };
 
 const App: NextPage = () => {

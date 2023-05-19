@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply bg-slate-50 text-teal-400 border-slate-200
+}
+
+textarea {
+    @apply bg-slate-50
+}
