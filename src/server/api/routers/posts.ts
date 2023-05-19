@@ -14,7 +14,10 @@ const ratelimit = new Ratelimit({
 export const postsRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     try {
-      const data = await ctx.prisma.post.findMany({ take: 20 });
+      const data = await ctx.prisma.post.findMany({
+        take: 20,
+        orderBy: { createDate: "desc" },
+      });
       return data;
     } catch (e) {
       console.log("catching errors babyyy", e);
