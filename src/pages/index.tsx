@@ -14,7 +14,7 @@ import {
 const Home = () => {
   return (
     <div className="flex h-screen w-screen justify-center ">
-      <div className="h-max w-full max-w-3xl items-center border-x-2">
+      <div className="h-max min-h-screen w-full max-w-3xl items-center border-x-2">
         <CreatePost />
         <PostsView />
       </div>
