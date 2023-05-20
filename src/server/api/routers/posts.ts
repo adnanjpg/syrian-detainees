@@ -20,6 +20,8 @@ export const postsRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       const limit = 20;
       const { skip, cursor } = input;
 

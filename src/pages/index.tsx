@@ -4,8 +4,12 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { MutableRefObject, forwardRef, useRef } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import {
+  LoadingPage,
+  LoadingSpinner,
+  LoadingSpinnerSpacy,
+} from "~/components/loader";
 
 const Home = () => {
   return (
@@ -49,13 +53,12 @@ const CreatePost = () => {
     >
       <div className="my-2 flex w-full flex-row border-b-4 p-2">
         <textarea
-          // dont show border when focused
           className=" w-full resize-none rounded-xl py-2 outline-none"
           maxLength={140}
           placeholder="What's happening?"
           {...register("content", { required: true })}
         />
-        {isPosting && <div>Posting...</div>}
+        {isPosting && <LoadingSpinner />}
         {!isPosting && (
           <button
             className="h-14 rounded-xl bg-teal-400 px-8 text-white"
@@ -78,7 +81,7 @@ const PostsView = () => {
       }
     );
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingPage />;
 
   if (isError || !data) return <div>Error: {error?.message}</div>;
 
@@ -90,11 +93,9 @@ const PostsView = () => {
         dataLength={posts.length}
         next={fetchNextPage}
         hasMore={hasNextPage == true}
-        loader={<h4>Loading...</h4>}
+        loader={<LoadingSpinnerSpacy />}
       >
-        {/* <div className="flex flex-col "> */}
         {...posts.map((post) => <PostItem key={post.id} post={post} />)}
-        {/* </div> */}
       </InfiniteScroll>
     </>
   );
