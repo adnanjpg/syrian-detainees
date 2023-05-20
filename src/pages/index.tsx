@@ -4,6 +4,8 @@ import Head from "next/head";
 import { api } from "~/utils/api";
 
 import { type SubmitHandler, useForm } from "react-hook-form";
+import { MutableRefObject, forwardRef, useRef } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Home = () => {
   return (
@@ -68,25 +70,40 @@ const CreatePost = () => {
 };
 
 const PostsView = () => {
-  const posts = api.posts.getAll.useQuery();
+  const { data, fetchNextPage, isLoading, isError, error, hasNextPage } =
+    api.posts.getAll.useInfiniteQuery(
+      {},
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
 
-  if (posts.isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
 
-  const data = posts.data;
+  if (isError || !data) return <div>Error: {error?.message}</div>;
 
-  if (posts.isError || !data) return <div>Error: {posts.error?.message}</div>;
+  const posts = data.pages.flatMap((page) => page.items);
 
   return (
-    <div className="flex flex-col ">
-      {...data.map((post) => <PostItem key={post.id} post={post} />)}
-    </div>
+    <>
+      <InfiniteScroll
+        dataLength={posts.length}
+        next={fetchNextPage}
+        hasMore={hasNextPage == true}
+        loader={<h4>Loading...</h4>}
+      >
+        {/* <div className="flex flex-col "> */}
+        {...posts.map((post) => <PostItem key={post.id} post={post} />)}
+        {/* </div> */}
+      </InfiniteScroll>
+    </>
   );
 };
 
 const PostItem = (props: { post: Post }) => {
   const post = props.post;
 
-  return <div className="w-full border-b  p-4">{post.content}</div>;
+  return <div className="w-full border-b p-4">{post.content}</div>;
 };
 
 const App: NextPage = () => {
