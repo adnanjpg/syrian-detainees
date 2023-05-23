@@ -3,15 +3,25 @@ import { api } from "~/utils/api";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 import { LoadingPage, LoadingSpinnerSpacy } from "~/components/loader";
+import { useRealtimePostUpdates } from "~/hooks/useRealtimePostUpdates";
 
 export const PostsView = () => {
-  const { data, fetchNextPage, isLoading, isError, error, hasNextPage } =
-    api.posts.getAll.useInfiniteQuery(
-      {},
-      {
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
-    );
+  const {
+    data,
+    fetchNextPage,
+    isLoading,
+    isError,
+    error,
+    hasNextPage,
+    refetch,
+  } = api.posts.getAll.useInfiniteQuery(
+    {},
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+
+  useRealtimePostUpdates(() => void refetch());
 
   if (isLoading) return <LoadingPage />;
 
