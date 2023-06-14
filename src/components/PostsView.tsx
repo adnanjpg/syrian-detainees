@@ -1,3 +1,7 @@
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+TimeAgo.addDefaultLocale(en);
+
 import type { Post } from "@prisma/client";
 import { api } from "~/utils/api";
 
@@ -46,5 +50,14 @@ export const PostsView = () => {
 const PostItem = (props: { post: Post }) => {
   const post = props.post;
 
-  return <div className="w-full border-b p-4">{post.content}</div>;
+  const timeAgo = new TimeAgo("en-US");
+
+  const time = timeAgo.format(post.createDate);
+
+  return (
+    <div className="flex w-full flex-row border-b p-4">
+      <div className="flex-grow">{post.content}</div>
+      <div className="min-w-fit">{time}</div>
+    </div>
+  );
 };
