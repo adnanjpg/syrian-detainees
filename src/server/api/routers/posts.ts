@@ -5,11 +5,11 @@ import z from "zod";
 
 import { TRPCError } from "@trpc/server";
 
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "1 m"),
-  analytics: true,
-});
+// const ratelimit = new Ratelimit({
+//   redis: Redis.fromEnv(),
+//   limiter: Ratelimit.slidingWindow(5, "1 m"),
+//   analytics: true,
+// });
 
 export const postsRouter = createTRPCRouter({
   getAll: publicProcedure
@@ -49,8 +49,9 @@ export const postsRouter = createTRPCRouter({
       let isLimited = true;
 
       if (ip) {
-        const { success } = await ratelimit.limit(ip);
-        isLimited = !success;
+        // const { success } = await ratelimit.limit(ip);
+        // isLimited = !success;
+        isLimited = false;
       }
 
       if (isLimited) {
