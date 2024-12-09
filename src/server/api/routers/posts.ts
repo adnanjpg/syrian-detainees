@@ -42,7 +42,16 @@ export const postsRouter = createTRPCRouter({
       };
     }),
   create: publicProcedure
-    .input(z.object({ content: z.string() }))
+    .input(
+      z.object({
+        fullName: z.string(),
+        province: z.string(),
+        district: z.string(),
+        birthDate: z.date(),
+        imageUrl: z.string(),
+        whatsappFullNumber: z.string(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const ip = ctx.requestIp;
 
@@ -63,7 +72,7 @@ export const postsRouter = createTRPCRouter({
 
       return ctx.prisma.post.create({
         data: {
-          content: input.content,
+          ...input,
         },
       });
     }),
