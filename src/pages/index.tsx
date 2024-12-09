@@ -19,8 +19,8 @@ const App: NextPage = () => {
   return (
     <>
       <Head>
-        <title>baykus 🦉</title>
-        <meta name="description" content="the media nest" />
+        <title>المعتقلون السوريون</title>
+        <meta name="description" content="قاعدة بيانات للمعتقلين السوريين" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Home />
