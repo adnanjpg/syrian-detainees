@@ -9,11 +9,12 @@ datasource db {
 }
 
 model Post {
-    id         Int      @id @default(autoincrement())
-    fullName   String
-    province   String
-    district   String
-    birthDate  DateTime
-    imageUrl   String
-    createDate DateTime @default(now())
+    id                 Int      @id @default(autoincrement())
+    fullName           String
+    province           String
+    district           String
+    birthDate          DateTime
+    imageUrl           String
+    whatsappFullNumber String
+    createDate         DateTime @default(now())
 }
