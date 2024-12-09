@@ -10,6 +10,10 @@ datasource db {
 
 model Post {
     id         Int      @id @default(autoincrement())
-    content    String
+    fullName   String
+    province   String
+    district   String
+    birthDate  DateTime
+    imageUrl   String
     createDate DateTime @default(now())
 }
